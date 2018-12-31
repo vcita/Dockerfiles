@@ -19,7 +19,7 @@ phases:
     commands:
     - echo Build started on $(date)
     - echo Building the Docker images...
-    - for APP in $CHANGED; do cd $APP; docker build --file $APP/Dockerfile --tag $ECR_EU_CENTRAL_1/$APP:latest $APP; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_CENTRAL_1/$APP:$IMAGE_TAG; done
+    - for APP in $CHANGED; do docker build --file $APP/Dockerfile --tag $ECR_EU_CENTRAL_1/$APP:latest $APP; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_CENTRAL_1/$APP:$IMAGE_TAG; done
     - for APP in $CHANGED; do docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_WEST_1/$APP:latest; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_WEST_1/$APP:$IMAGE_TAG; done
     - for APP in $CHANGED; do docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_US_EAST_1/$APP:latest; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_US_EAST_1/$APP:$IMAGE_TAG; done
   post_build:
