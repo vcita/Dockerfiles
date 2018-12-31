@@ -5,23 +5,27 @@ phases:
     commands:
     - echo Logging in to Amazon ECR...
     - aws --version
-    - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+    - $(aws ecr get-login --region eu-central-1 --no-include-email)
     - $(aws ecr get-login --region eu-west-1 --no-include-email)
+    - $(aws ecr get-login --region us-east-1 --no-include-email)
     - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
     - IMAGE_TAG=${COMMIT_HASH:=latest}
     - CHANGED=$(git diff HEAD~1 --name-only | grep / | awk 'BEGIN {FS="/"} {print $1}' | uniq)
     - if test -z $CHANGED; then CHANGED=$(ls -1d */ | cut -f1 -d'/'); fi
     - ECR_EU_CENTRAL_1=184806450101.dkr.ecr.eu-central-1.amazonaws.com
     - ECR_EU_WEST_1=184806450101.dkr.ecr.eu-west-1.amazonaws.com
+    - ECR_US_EAST_1=184806450101.dkr.ecr.us-east-1.amazonaws.com
   build:
     commands:
     - echo Build started on $(date)
     - echo Building the Docker images...
     - for APP in $CHANGED; do cd $APP; docker build --tag $ECR_EU_CENTRAL_1/$APP:latest .; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_CENTRAL_1/$APP:$IMAGE_TAG; done
     - for APP in $CHANGED; do docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_WEST_1/$APP:latest; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_EU_WEST_1/$APP:$IMAGE_TAG; done
+    - for APP in $CHANGED; do docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_US_EAST_1/$APP:latest; docker tag $ECR_EU_CENTRAL_1/$APP:latest $ECR_US_EAST_1/$APP:$IMAGE_TAG; done
   post_build:
     commands:
     - echo Build completed on $(date)
     - echo Pushing the Docker images...
     - for APP in $CHANGED; do docker push $ECR_EU_CENTRAL_1/$APP:latest; docker push $ECR_EU_CENTRAL_1/$APP:$IMAGE_TAG; done
     - for APP in $CHANGED; do docker push $ECR_EU_WEST_1/$APP:latest; docker push $ECR_EU_WEST_1/$APP:$IMAGE_TAG; done
+    - for APP in $CHANGED; do docker push $ECR_US_EAST_1/$APP:latest; docker push $ECR_US_EAST_1/$APP:$IMAGE_TAG; done
