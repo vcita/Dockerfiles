@@ -1,0 +1,2 @@
+# Dockerfiles
+![Build Status](https://codebuild.eu-central-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSklPNnJuYXlVM1Z6NmRUNXNvd0FSbE45elFWY05HaC9oWVhpeW9RcGwvZXF3a0xmN2trRVdoQS96dlNmWkhNTTJOVjZsUmdnQkVWVHB3SmlXdmg4MU5NPSIsIml2UGFyYW1ldGVyU3BlYyI6IkRFZ1RFNE9oem40bjhiN1IiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
